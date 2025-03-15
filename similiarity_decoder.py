@@ -7,6 +7,7 @@ class Similiarity_Matrix_Generator:
         self.tokenizer = Phrase_Tokenizer("d.json")
         self.tokenized_dataset = self.tokenizer.tokenize_sentences(self.tokenizer.read_sentences('d.json'))
         self.token_details = None
+        self.normalize = False
     
     def generate_token_details(self):
         token_details = {}
@@ -14,9 +15,10 @@ class Similiarity_Matrix_Generator:
             for token in tokenized_sentence:
                 if token not in token_details:
                     token_details[token] = {'left': [], 'right': []}
-                token_details[token]['left'].append(tokenized_sentence[:tokenized_sentence.index(token)])
+                token_details[token]['left'].append(tokenized_sentence[:tokenized_sentence.index(token)]) 
                 token_details[token]['right'].append(tokenized_sentence[tokenized_sentence.index(token) + 1:])
         self.token_details = token_details
+        print(token_details)
         return token_details
 
     def compute_matrix(self):
@@ -43,12 +45,22 @@ class Similiarity_Matrix_Generator:
             for compare_token in self.token_details:
                 for each_right_of_compare in self.token_details[compare_token]['right']:
                     for each_right_of_token in right_tokens:
-                        if each_right_of_compare == each_right_of_token:
+                        if each_right_of_compare == each_right_of_token and (len(each_right_of_compare) > 0 and len(each_right_of_token) > 0):
                             if not token in similiarity_matrix:
                                 similiarity_matrix[token] = {}
                             if not compare_token in similiarity_matrix[token]:
                                 similiarity_matrix[token][compare_token] = 0
                             similiarity_matrix[token][compare_token] += 1
+
+        # Normalize
+        if self.normalize:
+            for token in similiarity_matrix:
+                factor = similiarity_matrix[token][token]
+                for compare_token in similiarity_matrix[token]:
+                    #pass
+                    similiarity_matrix[token][compare_token] = similiarity_matrix[token][compare_token] / factor
+
+
         self.similiarity_matrix = similiarity_matrix
         return similiarity_matrix
 
@@ -69,7 +81,7 @@ class Similiarity_Matrix_Generator:
         for token in self.similiarity_matrix:
             print(f"{self.tokenizer.convert_token_to_phrase(token)} is similiar to: ", end="")
             for compare_token in self.similiarity_matrix[token]:
-                print(f"{self.tokenizer.convert_token_to_phrase(compare_token)}, ", end="")
+                print(f"{self.tokenizer.convert_token_to_phrase(compare_token)}({self.similiarity_matrix[token][compare_token]}), ", end="")
             print()
         
 
@@ -79,7 +91,7 @@ if __name__ == "__main__":
     similiarity_matrix_generator.generate_token_details()
     similiarity_matrix_generator.compute_matrix()
     print(similiarity_matrix_generator.tokenizer.get_tokens())
-    print()
-    print(json.dumps(similiarity_matrix_generator.similiarity_matrix, indent=4))
-    #similiarity_matrix_generator.print_similiar_tokens()
+    #print()
+    #print(json.dumps(similiarity_matrix_generator.similiarity_matrix, indent=4))
+    similiarity_matrix_generator.print_similiar_tokens()
 

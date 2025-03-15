@@ -4,8 +4,9 @@ class Phrase_Tokenizer:
     def __init__(self, file_path):
         self.sentences = self.read_sentences(file_path)
         self.word_details = self._generate_word_details()
-        self.phrase_to_token = self._compute_tokens()
         self.token_to_phrase = {}
+        self.phrase_to_token = self._compute_tokens()
+
     
     def read_sentences(self, file_path):
         with open(file_path, "r", encoding="utf-8") as f:
@@ -85,7 +86,6 @@ class Phrase_Tokenizer:
                 return right_phrase
 
         phrase_to_token = {}
-        token_to_phrase = {}
         token_index = 0
         for word in self.word_details:
             phrase = create_left_phrase(word) + word + create_right_phrase(word)
@@ -93,11 +93,17 @@ class Phrase_Tokenizer:
             #token_to_phrase[token_index] = phrase
             token_index += 1
         
-        self.token_to_phrase = token_to_phrase
         self.phrase_to_token = refine_tokens(phrase_to_token)
+        self.token_to_phrase = {}
+
+        for phrase in self.phrase_to_token:
+            self.token_to_phrase[self.phrase_to_token[phrase]] = phrase
+        #print(self.token_to_phrase)
+        
         return self.phrase_to_token
     
     def convert_token_to_phrase(self, token):
+        #print(self.token_to_phrase)
         return self.token_to_phrase[token]
     
 
