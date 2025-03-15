@@ -1,8 +1,11 @@
 {
     "sentences": [
-        "car have 4 wheels",
-        "jeep have 4 wheels",
-        "car have 4 cylinder engine",
-        "jeep have 4 cylinder engine"
+        "<s> car have 4 wheels <e>",
+        "<s> jeep have 4 wheels <e>",
+        "<s> car have 4 cylinder engine <e>",
+        "<s> jeep have 4 cylinder engine <e>",
+        "<s> sun is shinning in sky <e>",
+        "<s> sky is bright <e>",
+        "<s> joy had a bike <e>"
     ]
 }
