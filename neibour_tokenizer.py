@@ -32,6 +32,12 @@ def generate_word_details(sentences):
 
 
 def tokenize(word_details):
+    def refine_token_index(word_to_token):
+        token_index = 0
+        for token_phrase in word_to_token:
+            word_to_token[token_phrase] = token_index
+            token_index += 1
+        return word_to_token
 
     def create_left_phrase(word_details, word):
         left_phrase = " "
@@ -75,7 +81,7 @@ def tokenize(word_details):
         word_to_token[create_left_phrase(word_details, word) + word + create_right_phrase(word_details, word)] = token_index
         token_index += 1
     
-    return word_to_token
+    return refine_token_index(word_to_token)
 
 #print(json.dumps(tokenize(generate_word_details(read_sentences("d.json"))), indent=4))
 print(json.dumps(tokenize(generate_word_details(read_sentences("d.json"))), indent=4))
