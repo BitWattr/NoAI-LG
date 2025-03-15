@@ -5,6 +5,7 @@ class Phrase_Tokenizer:
         self.sentences = self.read_sentences(file_path)
         self.word_details = self._generate_word_details()
         self.phrase_to_token = self._compute_tokens()
+        self.token_to_phrase = {}
     
     def read_sentences(self, file_path):
         with open(file_path, "r", encoding="utf-8") as f:
@@ -84,14 +85,22 @@ class Phrase_Tokenizer:
                 return right_phrase
 
         phrase_to_token = {}
+        token_to_phrase = {}
         token_index = 0
         for word in self.word_details:
-            phrase_to_token[create_left_phrase(word) + word + create_right_phrase(word)] = token_index
+            phrase = create_left_phrase(word) + word + create_right_phrase(word)
+            phrase_to_token[phrase] = token_index
+            #token_to_phrase[token_index] = phrase
             token_index += 1
         
+        self.token_to_phrase = token_to_phrase
         self.phrase_to_token = refine_tokens(phrase_to_token)
         return self.phrase_to_token
     
+    def convert_token_to_phrase(self, token):
+        return self.token_to_phrase[token]
+    
+
     def tokenize_sentences(self, sentences):
         token_map = self.phrase_to_token
         tokenized_sentences = []
@@ -128,6 +137,5 @@ class Phrase_Tokenizer:
         return json.dumps(self.phrase_to_token, indent=4)
 
 # Example usage
-tokenizer = Phrase_Tokenizer("d.json")
-print(tokenizer.get_tokens())
-print(tokenizer.tokenize_sentences(tokenizer.read_sentences("d.json")))
+#print(tokenizer.get_tokens())
+#print(tokenizer.tokenize_sentences(tokenizer.read_sentences("d.json")))

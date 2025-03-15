@@ -1,54 +1,24 @@
-def tokenize_sentences(sentences, token_map):
-    tokenized_sentences = []
-    
-    for sentence in sentences:
-        words = sentence.split()
-        i = 0
-        tokenized = []
-        
-        while i < len(words):
-            matched = False
-            
-            # Try matching longest possible n-grams first
-            for n in [3, 2, 1]:  # 3-word, then 2-word, then 1-word
-                if i + n <= len(words):
-                    phrase = " ".join(words[i:i + n])
-                    if phrase in token_map:
-                        tokenized.append(token_map[phrase])
-                        i += n
-                        matched = True
-                        break
-            
-            if not matched:
-                # Just append the word if no match (should not happen if mapping is correct)
-                tokenized.append(words[i])
-                i += 1
-        
-        tokenized_sentences.append(tokenized)
-    
-    return tokenized_sentences
+import numpy as np
 
-# Sample Data
-sentences = [
-    "<s> car have 4 wheels <e>",
-    "<s> jeep have 4 wheels <e>",
-    "<s> car have 4 cylinder engine <e>",
-    "<s> jeep have 4 cylinder engine <e>"
-]
-
-token_map = {
-    "<s>": 0,
-    "car": 1,
-    "have 4": 2,
-    "wheels": 3,
-    "<e>": 4,
-    "jeep": 5,
-    "cylinder engine": 6
+# Given similarity dictionary
+similarity_dict = {
+    "0": {"0": 20},
+    "1": {"1": 6, "5": 6},
+    "2": {"2": 16},
+    "3": {"3": 6, "6": 6},
+    "4": {"4": 20},
+    "5": {"1": 6, "5": 6},
+    "6": {"3": 6, "6": 6}
 }
 
-# Tokenize the sentences
-tokenized_output = tokenize_sentences(sentences, token_map)
+# Define matrix size (assuming keys are 0 to 6)
+size = max(map(int, similarity_dict.keys())) + 1
+matrix = np.zeros((size, size), dtype=int)
 
-# Print result
-for sent in tokenized_output:
-    print(sent)
+# Populate matrix from dictionary
+for i, values in similarity_dict.items():
+    for j, similarity in values.items():
+        matrix[int(i)][int(j)] = similarity
+
+# Display matrix
+print(matrix)
