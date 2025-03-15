@@ -4,7 +4,7 @@ class Phrase_Tokenizer:
     def __init__(self, file_path):
         self.sentences = self._read_sentences(file_path)
         self.word_details = self._generate_word_details()
-        self.word_to_token = self._compute_tokens()
+        self.phrase_to_token = self._compute_tokens()
     
     def _read_sentences(self, file_path):
         with open(file_path, "r", encoding="utf-8") as f:
@@ -32,12 +32,12 @@ class Phrase_Tokenizer:
         return word_details
     
     def _compute_tokens(self):
-        def refine_token_index(word_to_token):
+        def refine_token_index(phrase_to_token):
             token_index = 0
-            for token_phrase in word_to_token:
-                word_to_token[token_phrase] = token_index
+            for token_phrase in phrase_to_token:
+                phrase_to_token[token_phrase] = token_index
                 token_index += 1
-            return word_to_token
+            return phrase_to_token
 
         def create_left_phrase(word):
             left_phrase = " "
@@ -75,17 +75,31 @@ class Phrase_Tokenizer:
             elif len(right_words) > 1:
                 return right_phrase
 
-        word_to_token = {}
+        phrase_to_token = {}
         token_index = 0
         for word in self.word_details:
-            word_to_token[create_left_phrase(word) + word + create_right_phrase(word)] = token_index
+            phrase_to_token[create_left_phrase(word) + word + create_right_phrase(word)] = token_index
             token_index += 1
         
-        return refine_token_index(word_to_token)
+        return refine_token_index(phrase_to_token)
+    
+    def tokenize_datasest(self):
+        tokenized_sentences = []
+        for sentence in self.sentences:
+            tokenized_sentence = []
+            words = sentence.split()
+            for i, word in enumerate(words):
+                if word in self.phrase_to_token:
+                    tokenized_sentence.append(self.phrase_to_token[word])
+                else:
+                    for j in range(i, 0, -1):
+                        phrase = " ".join(words[i:j+1])
+
 
     def get_tokens(self):
-        return json.dumps(self.word_to_token, indent=4)
+        return json.dumps(self.phrase_to_token, indent=4)
 
 # Example usage
 tokenizer = Phrase_Tokenizer("d.json")
 print(tokenizer.get_tokens())
+print()

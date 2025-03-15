@@ -1,91 +1,33 @@
-import json
+import re
 
-class Phrase_Tokenizer:
-    def __init__(self, file_path):
-        self.sentences = self._read_sentences(file_path)
-        self.word_details = self._generate_word_details()
-        self.word_to_token = self._compute_tokens()
-    
-    def _read_sentences(self, file_path):
-        with open(file_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data["sentences"]
-    
-    def _generate_word_details(self):
-        sentences = self.sentences
-        word_details = {}
-        for sentence in sentences:
-            words = sentence.split()
-            for i, word in enumerate(words):
-                if word not in word_details:
-                    word_details[word] = {"left": [], "right": []}
-                
-                if i > 0:
-                    left_word = words[i - 1]
-                    if left_word not in word_details[word]["left"]:
-                        word_details[word]["left"].append(left_word)
-                
-                if i < len(words) - 1:
-                    right_word = words[i + 1]
-                    if right_word not in word_details[word]["right"]:
-                        word_details[word]["right"].append(right_word)
-        return word_details
-    
-    def _compute_tokens(self):
-        def refine_token_index(word_to_token):
-            token_index = 0
-            for token_phrase in word_to_token:
-                word_to_token[token_phrase] = token_index
-                token_index += 1
-            return word_to_token
+sentences = [
+    "<s> car have 4 wheels <e>",
+    "<s> jeep have 4 wheels <e>",
+    "<s> car have 4 cylinder engine <e>",
+    "<s> jeep have 4 cylinder engine <e>"
+]
 
-        def create_left_phrase(word):
-            left_phrase = " "
-            left_words = self.word_details[word]['left']
+tokenizer = {
+    " <s> ": 0,
+    " car ": 1,
+    " have 4 ": 2,
+    " wheels ": 3,
+    " <e> ": 4,
+    " jeep ": 5,
+    " cylinder engine ": 6
+}
 
-            if len(left_words) == 0:
-                return left_phrase
-            
-            elif len(left_words) == 1:
-                left_word = left_words[0]
-                if len(self.word_details[left_word]['right']) == 1 and self.word_details[left_word]['right'][0] == word:
-                    left_phrase = create_left_phrase(left_word) + left_word + left_phrase
-                    return left_phrase
-                elif len(self.word_details[left_word]['right']) > 1:
-                    return left_phrase
+# Sort tokenizer keys by length (descending order) to match longer phrases first
+sorted_keys = sorted(tokenizer.keys(), key=len, reverse=True)
 
-            elif len(left_words) > 1:
-                return left_phrase
-        
-        def create_right_phrase(word):
-            right_phrase = " "
-            right_words = self.word_details[word]['right']
+def split_sentence(sentence, token_keys):
+    pattern = "|".join(map(re.escape, token_keys))  # Create regex pattern with tokenizer keys
+    return re.findall(pattern, sentence)  # Extract matched tokens in order
 
-            if len(right_words) == 0:
-                return right_phrase
-            
-            elif len(right_words) == 1:
-                right_word = right_words[0]
-                if len(self.word_details[right_word]['left']) == 1 and self.word_details[right_word]['left'][0] == word:
-                    right_phrase = right_phrase + right_word + create_right_phrase(right_word)
-                    return right_phrase
-                elif len(self.word_details[right_word]['left']) > 1:
-                    return right_phrase
+# Process each sentence
+split_sentences = [split_sentence(sent, sorted_keys) for sent in sentences]
 
-            elif len(right_words) > 1:
-                return right_phrase
-
-        word_to_token = {}
-        token_index = 0
-        for word in self.word_details:
-            word_to_token[create_left_phrase(word) + word + create_right_phrase(word)] = token_index
-            token_index += 1
-        
-        return refine_token_index(word_to_token)
-
-    def get_tokens(self):
-        return json.dumps(self.word_to_token, indent=4)
-
-# Example usage
-tokenizer = Phrase_Tokenizer("d.json")
-print(tokenizer.get_tokens())
+# Print results
+for sent, split_tokens in zip(sentences, split_sentences):
+    print(f"Original: {sent}")
+    print(f"Split: {split_tokens}\n")
