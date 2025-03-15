@@ -11,7 +11,7 @@
         "<s> <!DOCTYPE html> <html> <head> <title> <e>"
     ],
 
-    "sentences": [
+    "sentencesj": [
         "<s> car have 4 wheels <e>",
         "<s> jeep have 4 wheels <e>",
         "<s> car have 4 cylinder engine <e>",
@@ -47,7 +47,7 @@
         "<s> okay take care <e>"
     ],
 
-    "sentencesj": [
+    "sentences": [
         "<s> car have 4 wheels <e>",
         "<s> jeep have 4 wheels <e>",
         "<s> bike have 2 wheels <e>",
