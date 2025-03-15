@@ -1,5 +1,34 @@
-import re
+def tokenize_sentences(sentences, token_map):
+    tokenized_sentences = []
+    
+    for sentence in sentences:
+        words = sentence.split()
+        i = 0
+        tokenized = []
+        
+        while i < len(words):
+            matched = False
+            
+            # Try matching longest possible n-grams first
+            for n in [3, 2, 1]:  # 3-word, then 2-word, then 1-word
+                if i + n <= len(words):
+                    phrase = " ".join(words[i:i + n])
+                    if phrase in token_map:
+                        tokenized.append(token_map[phrase])
+                        i += n
+                        matched = True
+                        break
+            
+            if not matched:
+                # Just append the word if no match (should not happen if mapping is correct)
+                tokenized.append(words[i])
+                i += 1
+        
+        tokenized_sentences.append(tokenized)
+    
+    return tokenized_sentences
 
+# Sample Data
 sentences = [
     "<s> car have 4 wheels <e>",
     "<s> jeep have 4 wheels <e>",
@@ -7,27 +36,19 @@ sentences = [
     "<s> jeep have 4 cylinder engine <e>"
 ]
 
-tokenizer = {
-    " <s> ": 0,
-    " car ": 1,
-    " have 4 ": 2,
-    " wheels ": 3,
-    " <e> ": 4,
-    " jeep ": 5,
-    " cylinder engine ": 6
+token_map = {
+    "<s>": 0,
+    "car": 1,
+    "have 4": 2,
+    "wheels": 3,
+    "<e>": 4,
+    "jeep": 5,
+    "cylinder engine": 6
 }
 
-# Sort tokenizer keys by length (descending order) to match longer phrases first
-sorted_keys = sorted(tokenizer.keys(), key=len, reverse=True)
+# Tokenize the sentences
+tokenized_output = tokenize_sentences(sentences, token_map)
 
-def split_sentence(sentence, token_keys):
-    pattern = "|".join(map(re.escape, token_keys))  # Create regex pattern with tokenizer keys
-    return re.findall(pattern, sentence)  # Extract matched tokens in order
-
-# Process each sentence
-split_sentences = [split_sentence(sent, sorted_keys) for sent in sentences]
-
-# Print results
-for sent, split_tokens in zip(sentences, split_sentences):
-    print(f"Original: {sent}")
-    print(f"Split: {split_tokens}\n")
+# Print result
+for sent in tokenized_output:
+    print(sent)
