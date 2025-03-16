@@ -10,3 +10,10 @@
 # How it works?
  ## Tokenizer
   The tokenizer used is specifically designed. it tokenizes common phrases rather than just individual words
+ ## Translation
+  First a similiarity matrix(a matrix detailing how much each token is similiar to every other token in voabulary) is made by identifying patterns in training dataset(sentences). During inference(translation) this similiarity matrix is used to replace words(tokens).
+
+# Future
+ Question answering
+ language generation
+ summarization
