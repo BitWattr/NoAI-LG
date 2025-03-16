@@ -127,8 +127,7 @@ if __name__ == "__main__":
     similiarity_matrix_generator.compute_matrix()
     print(similiarity_matrix_generator.tokenizer.get_tokens())
     #print()
-    #print(json.dumps(similiarity_matrix_generator.similiarity_matrix, indent=4))
-    similiarity_matrix_generator.print_similiar_tokens()
-    similiarity_matrix_generator.print_phrase_matrix()
+    print(json.dumps(similiarity_matrix_generator.similiarity_matrix, indent=4))
+
     similiarity_matrix_generator.export_matrix_to_csv()
 

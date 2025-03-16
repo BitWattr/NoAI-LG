@@ -104,7 +104,10 @@ class Phrase_Tokenizer:
     
     def convert_token_to_phrase(self, token):
         #print(self.token_to_phrase)
-        return self.token_to_phrase[token]
+        if isinstance(token, int):
+            return self.token_to_phrase[token]
+        else:
+            return token
     
 
     def tokenize_sentences(self, sentences):
@@ -120,7 +123,7 @@ class Phrase_Tokenizer:
                 matched = False
                 
                 # Try matching longest possible n-grams first
-                for n in [3, 2, 1]:  # 3-word, then 2-word, then 1-word
+                for n in [6, 5, 4, 3, 2, 1]:  # 3-word, then 2-word, then 1-word
                     if i + n <= len(words):
                         phrase = " ".join(words[i:i + n])
                         if phrase in token_map:
@@ -132,6 +135,7 @@ class Phrase_Tokenizer:
                 if not matched:
                     # Just append the word if no match (should not happen if mapping is correct)
                     tokenized.append(words[i])
+                    #tokenized.append(-1)
                     i += 1
             
             tokenized_sentences.append(tokenized)

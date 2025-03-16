@@ -11,11 +11,12 @@
         "<s> <!DOCTYPE html> <html> <head> <title> <e>"
     ],
 
-    "sentencesj": [
+    "sentencest": [
         "<s> car have 4 wheels <e>",
         "<s> jeep have 4 wheels <e>",
-        "<s> car have 4 cylinder engine <e>",
         "<s> bike have 2 wheels <e>",
+        "<s> car have 4 cylinder engine <e>",
+        "<s> bike have 2 cylinder engine <e>",
         "<s> jeep have 4 cylinder engine <e>"
     ],
 
@@ -47,7 +48,7 @@
         "<s> okay take care <e>"
     ],
 
-    "sentences": [
+    "sentencesg": [
         "<s> car have 4 wheels <e>",
         "<s> jeep have 4 wheels <e>",
         "<s> bike have 2 wheels <e>",
@@ -69,5 +70,45 @@
         "<s> helicopter have 2 rotor blades <e>",
         "<s> boat have no wheels <e>",
         "<s> ship have no wheels <e>"
+    ],
+    
+    "sentences": [
+        "<s> car have 4 wheels <e>",
+        "<s> jeep have 4 wheels <e>",
+        "<s> bike have 2 wheels <e>",
+        "<s> truck have 6 wheels <e>",
+        "<s> bus have 6 wheels <e>",
+        "<s> cycle have 2 wheels <e>",
+        "<s> car have 4 cylinder engine <e>",
+        "<s> jeep have 4 cylinder engine <e>",
+        "<s> bike have 2 cylinder engine <e>",
+        "<s> truck have 6 cylinder engine <e>",
+        "<s> bus have 6 cylinder engine <e>",
+        "<s> cycle have 1 cylinder engine <e>",
+        "<s> car is fast <e>",
+        "<s> jeep is fast <e>",
+        "<s> bike is very fast <e>",
+        "<s> truck is slow <e>",
+        "<s> bus is slow <e>",
+        "<s> cycle is very slow <e>",
+        "<s> car has four doors <e>",
+        "<s> jeep has two doors <e>",
+        "<s> bike has no doors <e>",
+        "<s> truck has two doors <e>",
+        "<s> bus has three doors <e>",
+        "<s> cycle has no doors <e>",
+        "<s> car has a steering wheel <e>",
+        "<s> jeep has a steering wheel <e>",
+        "<s> bike has no steering wheel <e>",
+        "<s> truck has a steering wheel <e>",
+        "<s> bus has a steering wheel <e>",
+        "<s> cycle has no steering wheel <e>",
+        "<s> car moves fast on road <e>",
+        "<s> jeep moves fast on road <e>",
+        "<s> bike moves very fast on road <e>",
+        "<s> truck moves slowly on road <e>",
+        "<s> bus moves slowly on road <e>",
+        "<s> cycle moves very slowly on road <e>"
     ]
+
 }
